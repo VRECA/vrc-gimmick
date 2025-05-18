@@ -2,7 +2,7 @@
 
 企劃: LR163([@LR163_VRC](https://x.com/LR163_VRC))
 美術: SouyaP([@p_souya](https://x.com/p_souya))
-Asset製作: Vistanz(@[JLChnToZ)](https://x.com/JLChnTo))
+Asset製作: Vistanz([@JLChnToZ](https://x.com/JLChnToZ))
 系統製作: Kamiya4047([@kamiya4047](https://x.com/kamiya4047))、CrossBoneMan([@redsriper](https://x.com/redsriper))
 
 - 此系統是參考鄰近地區的活動日曆所製作的自動化活動宣傳系統『VRC台港澳圈活動活動日曆』，希望可以減少VRChat台港澳用戶舉辦活動的阻力。
@@ -26,7 +26,7 @@ https://forms.gle/SGs2SewsBug1G4F27
 ## Google日曆連結
 http://vrc.hhlab.cc/
 
-## VRChat World活動資訊頁面(由@Akimoto16Akira所製作)
+## VRChat World活動資訊頁面 (由 [@Akimoto16Akira](https://x.com/Akimoto16Akira) 所製作)
 https://vr-chat.world/event
 
 負責單位: 台港澳VRChat活動文化推廣協會
