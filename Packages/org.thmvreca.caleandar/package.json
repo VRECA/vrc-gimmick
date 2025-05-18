@@ -1,0 +1,21 @@
+{
+  "name": "org.thmvreca.caleandar",
+  "displayName": "Taiwan-Hong Kong-Macao Event Calendar",
+  "version": "2.0.1",
+  "unity": "2022.3",
+  "description": "VRChat 繁中圈（台港澳）活動日曆",
+  "license": "UNLICENSED",
+  "vrchatVersion": "2022.1.1",
+  "vpmDependencies": {
+    "com.vrchat.core.vpm-resolver": "0.x.x",
+    "com.vrchat.worlds": "3.x.x"
+  },
+  "author": {
+    "name": "Jeremy Lam aka. Vistanz",
+    "email": "me@moka-rin.moe",
+    "url": "https://xtl.booth.pm"
+  },
+  "legacyFolders": {
+    "THMVRCalendar": "ad75cc8690a590c4bab5d578675caa5c"
+  }
+}
