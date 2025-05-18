@@ -15,8 +15,10 @@ Asset製作: Vistanz ([@JLChnToZ](https://x.com/JLChnToZ))
 ## 更新紀錄
 2022/05/31
 - 公開
+
 2023/02/15
 - 新增加載提示畫面，並更新成VCC版。
+
 2023/03/02
 - 改為採用VRChat的動態圖片載入功能, 無須再勾選Allow Untrusted URL
 
