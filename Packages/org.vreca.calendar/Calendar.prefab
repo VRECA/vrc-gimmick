@@ -1082,6 +1082,8 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 8612189675603509978}
   dataUrl:
     url: https://vreca.github.io/v1/events.json
+  imageUrlPattern: https://vreca.github.io/v1/[1-9]\d{0,2}.png
+  imageUrlKeyRegex: ^https:\/\/vreca\.github\.io\/v1\/(.+)$
   imageUrls: []
   entryPrefab: {fileID: 2485908300489686896}
 --- !u!114 &8612189675603509978

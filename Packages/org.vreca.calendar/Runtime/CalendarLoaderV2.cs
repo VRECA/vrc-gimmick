@@ -1,19 +1,21 @@
-﻿
-using JLChnToZ.VRC.Foundation;
+﻿using JLChnToZ.VRC.Foundation;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
 using VRC.SDK3.Image;
 using VRC.SDK3.StringLoading;
 using VRC.SDKBase;
-using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 
 namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
-    public class CalendarLoaderV2 : UdonSharpBehaviour {
+    public partial class CalendarLoaderV2 : UdonSharpBehaviour {
         [SerializeField] VRCUrl dataUrl;
+        [SerializeField] string imageUrlPattern, imageUrlKeyRegex;
+        [GeneratedUrls(PatternSourceProperty = nameof(imageUrlPattern))]
         [SerializeField] VRCUrl[] imageUrls;
+        [GeneratedUrlMapper(TargetUrlArray = nameof(imageUrls), RegexPatternSourceProperty = nameof(imageUrlKeyRegex))]
+        [SerializeField, HideInInspector] DataDictionary url2url;
         [SerializeField] GameObject entryPrefab;
         Transform entryParent;
         DataList spawnedEntries;
@@ -28,7 +30,9 @@ namespace VRCEA.Calendar {
         }
 
         public override void OnStringLoadSuccess(IVRCStringDownload result) {
-            if (!VRCJson.TryDeserializeFromJson(result.Result, out var data) || data.TokenType != TokenType.DataList) return;
+            if (!VRCJson.TryDeserializeFromJson(result.Result, out var data) || data.TokenType != TokenType.DataDictionary) return;
+            var rawDataRoot = data.DataDictionary;
+            if (!rawDataRoot.TryGetValue("data", TokenType.DataList, out data)) return;
             var rawData = data.DataList;
             if (spawnedEntries == null) spawnedEntries = new DataList();
             int count = rawData.Count;
