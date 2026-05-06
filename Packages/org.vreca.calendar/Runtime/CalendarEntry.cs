@@ -7,23 +7,56 @@ using VRC.SDK3.Data;
 using VRC.Economy;
 using UdonSharp;
 using JLChnToZ.VRC.Foundation;
+using VRC.SDKBase;
+using VRC.SDK3.Image;
+using VRC.Udon.Common.Interfaces;
 
 namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class CalendarEntry : UdonSharpBehaviour {
-        [SerializeField] TMP_Text dateText, titleText;
-        [SerializeField, Multiline] string dateFormat, titleFormat;
-        [SerializeField, BindEvent(nameof(Button.onClick), nameof(_ButtonClick))] Button clickButton;
+        [SerializeField] TMP_Text[] contents;
+        string[] foramts;
+        [SerializeField, BindEvent(nameof(Toggle.onValueChanged), nameof(_ExpandToggleClick))]
+        Toggle expandToggle;
+        [SerializeField, BindEvent(nameof(Button.onClick), nameof(_GroupButtonClick))]
+        Button groupButton;
+        [SerializeField, HideInInspector, Resolve(nameof(groupButton))]
+        GameObject groupButtonObject;
+        [SerializeField] GameObject posterImageContainer;
+        [SerializeField, HideInInspector, Resolve(nameof(posterImageContainer) + "#/**")]
+        RawImage posterImage;
+        [SerializeField, HideInInspector, Resolve(nameof(posterImage))]
+        AspectRatioFitter posterAspect;
         StringBuilder sb;
+        string groupId;
+        DataToken poster;
+        object[] args;
+        DateTime timeStart, timeEnd;
+        bool hasLoadedImage;
+
+        [NonSerialized]
 #if COMPILER_UDONSHARP
         public
 #else
         internal
 #endif
-        DataDictionary data;
-        string title, summary, groupId, tags;
-        DateTime timeStart, timeEnd;
-        double duration;
+        DataDictionary data, instanceTypeNameMap, key2Url;
+
+        [NonSerialized]
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        VRCUrl[] imageUrls;
+
+        [NonSerialized]
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        VRCImageDownloader imageDownloader;
 
 #if COMPILER_UDONSHARP
         public
@@ -31,36 +64,53 @@ namespace VRCEA.Calendar {
         internal
 #endif
         void _onVarChange_data() {
-            ParseString("title", out title);
-            ParseString("summary", out summary);
-            ParseString("group_id", out groupId);
-            ParseTime("time_start", out timeStart);
-            ParseTime("time_end", out timeEnd);
-            ParseStringArray("tags", " ", "#{0}", out tags);
-            duration = (timeEnd - timeStart).TotalHours;
-            dateText.text = string.Format(dateFormat, title, summary, groupId, tags, timeStart, timeEnd, duration, "", "");
-            titleText.text = string.Format(titleFormat, title, summary, groupId, tags, timeStart, timeEnd, duration, "", "");
+            if (!Utilities.IsValid(args) || args.Length < 10) args = new object[10];
+            ParseString("title", 0);
+            ParseString("description", 1);
+            ParseString("group_name", 5);
+            ParseStringArray("tags", " ", "#{0}", 7);
+            timeStart = ParseTime("time_start");
+            timeEnd = ParseTime("time_end");
+            args[2] = timeStart;
+            args[3] = timeEnd;
+            args[4] = (timeEnd - timeStart).TotalHours;
+            args[6] = data.TryGetValue("instance_type", out var dt) && instanceTypeNameMap.TryGetValue(dt, TokenType.String, out dt) ? dt.String : "";
+            groupId = ParseString("group_id");
+            data.TryGetValue("poster", out poster);
+            if (!Utilities.IsValid(foramts) || foramts.Length != contents.Length) {
+                foramts = new string[contents.Length];
+                for (int i = 0; i < contents.Length; i++)
+                    foramts[i] = contents[i].text;
+            }
+            for (int i = 0; i < contents.Length; i++)
+                contents[i].text = string.Format(foramts[i], args);
             gameObject.SetActive(true);
+            if (Utilities.IsValid(posterImageContainer))
+                posterImageContainer.SetActive(false);
+            if (Utilities.IsValid(groupButtonObject))
+                groupButtonObject.SetActive(!string.IsNullOrEmpty(groupId));
+            hasLoadedImage = false;
         }
 
-        void ParseString(string key, out string value) {
+        string ParseString(string key) => data.TryGetValue(key, TokenType.String, out var dt) ? dt.String : "";
+
+        void ParseString(string key, int index) {
             if (data.TryGetValue(key, TokenType.String, out var dt)) {
-                value = dt.String;
+                args[index] = dt.String;
                 return;
             }
-            value = "";
+            args[index] = "";
         }
 
-        void ParseTime(string key, out DateTime time) {
+        DateTime ParseTime(string key) {
             if (data.TryGetValue(key, TokenType.String, out var dt) &&
                 DateTime.TryParse(dt.String, out var t)) {
-                time = t.ToLocalTime();
-                return;
+                return t.ToLocalTime();
             }
-            time = default;
+            return default;
         }
 
-        void ParseStringArray(string key, string separator, string format, out string values) {
+        void ParseStringArray(string key, string separator, string format, int index) {
             if (data.TryGetValue(key, TokenType.DataList, out var dt)) {
                 var list = dt.DataList;
                 if (sb == null) sb = new StringBuilder();
@@ -70,10 +120,10 @@ namespace VRCEA.Calendar {
                     sb.AppendFormat(format, dt);
                     if (i < count - 1) sb.Append(separator);
                 }
-                values = sb.ToString();
+                args[index] = sb.ToString();
                 return;
             }
-            values = "";
+            args[index] = "";
         }
 
 #if COMPILER_UDONSHARP
@@ -81,12 +131,33 @@ namespace VRCEA.Calendar {
 #else
         internal
 #endif
-        void _ButtonClick() {
+        void _ExpandToggleClick() {
+            if (!expandToggle.isOn || hasLoadedImage || !Utilities.IsValid(posterImage)) return;
+            hasLoadedImage = true;
+            if (!key2Url.TryGetValue(poster, TokenType.Int, out var url)) return;
+            imageDownloader.DownloadImage(imageUrls[url.Int], null, (IUdonEventReceiver)(object)this);
+        }
+
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        void _GroupButtonClick() {
             if (string.IsNullOrEmpty(groupId)) return;
 #if DEBUG
             Debug.Log($"Opening group page: {groupId}");
 #endif
             Store.OpenGroupPage(groupId);
+        }
+
+        public override void OnImageLoadSuccess(IVRCImageDownload result) {
+            var resultTexture = result.Result;
+            posterImage.texture = resultTexture;
+            if (Utilities.IsValid(posterAspect))
+                posterAspect.aspectRatio = (float)resultTexture.width / resultTexture.height;
+            if (Utilities.IsValid(posterImageContainer))
+                posterImageContainer.SetActive(true);
         }
     }
 }

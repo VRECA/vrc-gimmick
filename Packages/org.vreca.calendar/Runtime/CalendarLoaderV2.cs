@@ -10,19 +10,23 @@ using VRC.Udon.Common.Interfaces;
 namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public partial class CalendarLoaderV2 : UdonSharpBehaviour {
+        [SerializeField, Multiline] string instnaceTypeNameMapJson;
         [SerializeField] VRCUrl dataUrl;
         [SerializeField] string imageUrlPattern, imageUrlKeyRegex;
         [GeneratedUrls(PatternSourceProperty = nameof(imageUrlPattern))]
-        [SerializeField] VRCUrl[] imageUrls;
+        [SerializeField, HideInInspector] VRCUrl[] imageUrls;
         [GeneratedUrlMapper(TargetUrlArray = nameof(imageUrls), RegexPatternSourceProperty = nameof(imageUrlKeyRegex))]
-        [SerializeField, HideInInspector] DataDictionary url2url;
+        [SerializeField, HideInInspector] DataDictionary key2url;
+        [SerializeField, HideInInspector] DataDictionary instanceTypeNameMap;
         [SerializeField] GameObject entryPrefab;
         Transform entryParent;
         DataList spawnedEntries;
+        VRCImageDownloader imageDownloader;
 
         void Start() {
             _Reload();
             entryParent = entryPrefab.transform.parent;
+            imageDownloader = new VRCImageDownloader();
         }
 
         public void _Reload() {
@@ -44,6 +48,10 @@ namespace VRCEA.Calendar {
                     entry.transform.SetParent(entryParent, false);
                     entryHandler = entry.GetComponent<CalendarEntry>();
                     spawnedEntries.Add(entryHandler);
+                    entryHandler.instanceTypeNameMap = instanceTypeNameMap;
+                    entryHandler.key2Url = key2url;
+                    entryHandler.imageUrls = imageUrls;
+                    entryHandler.imageDownloader = imageDownloader;
                 } else
                     entryHandler = (CalendarEntry)spawnedEntries[i].Reference;
                 entryHandler.data = rawData[i].DataDictionary;
@@ -52,4 +60,17 @@ namespace VRCEA.Calendar {
                 ((CalendarEntry)spawnedEntries[i].Reference).gameObject.SetActive(false);
         }
     }
+
+#if !COMPILER_UDONSHARP && UNITY_EDITOR
+    public partial class CalendarLoaderV2 : ISelfPreProcess {
+        int IPrioritizedPreProcessor.Priority => 0;
+
+        void ISelfPreProcess.PreProcess() {
+            instanceTypeNameMap = VRCJson.TryDeserializeFromJson(instnaceTypeNameMapJson, out var data) &&
+                data.TokenType == TokenType.DataDictionary ?
+                data.DataDictionary : new DataDictionary();
+            instnaceTypeNameMapJson = "";
+        }
+    }
+#endif
 }
