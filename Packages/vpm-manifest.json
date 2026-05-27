@@ -5,6 +5,9 @@
     },
     "com.vrchat.core.vpm-resolver": {
       "version": "0.1.29"
+    },
+    "idv.jlchntoz.vrcw-foundation": {
+      "version": "0.0.55"
     }
   },
   "locked": {
@@ -21,6 +24,12 @@
     "com.vrchat.core.vpm-resolver": {
       "version": "0.1.29",
       "dependencies": {}
+    },
+    "idv.jlchntoz.vrcw-foundation": {
+      "version": "0.0.59",
+      "dependencies": {
+        "com.vrchat.worlds": "3.x.x >=3.9.0"
+      }
     }
   }
 }

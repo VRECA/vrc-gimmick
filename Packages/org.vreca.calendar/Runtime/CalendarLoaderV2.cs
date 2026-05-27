@@ -12,10 +12,8 @@ namespace VRCEA.Calendar {
     public partial class CalendarLoaderV2 : UdonSharpBehaviour {
         [SerializeField, Multiline] string instnaceTypeNameMapJson;
         [SerializeField] VRCUrl dataUrl;
-        [SerializeField] string imageUrlPattern, imageUrlKeyRegex;
+        [SerializeField] string imageUrlPattern;
         [GeneratedUrls(PatternSourceProperty = nameof(imageUrlPattern))]
-        [SerializeField, HideInInspector] VRCUrl[] imageUrls;
-        [GeneratedUrlMapper(TargetUrlArray = nameof(imageUrls), RegexPatternSourceProperty = nameof(imageUrlKeyRegex))]
         [SerializeField, HideInInspector] DataDictionary key2url;
         [SerializeField, HideInInspector] DataDictionary instanceTypeNameMap;
         [SerializeField] GameObject entryPrefab;
@@ -50,7 +48,6 @@ namespace VRCEA.Calendar {
                     spawnedEntries.Add(entryHandler);
                     entryHandler.instanceTypeNameMap = instanceTypeNameMap;
                     entryHandler.key2Url = key2url;
-                    entryHandler.imageUrls = imageUrls;
                     entryHandler.imageDownloader = imageDownloader;
                 } else
                     entryHandler = (CalendarEntry)spawnedEntries[i].Reference;

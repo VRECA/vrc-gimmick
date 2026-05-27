@@ -371,7 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -816,7 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 0.121568635, g: 0.6784314, b: 0.74509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -863,6 +863,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3504481814370290355}
+  - component: {fileID: 3283214629417760311}
   - component: {fileID: 9207979709025215160}
   - component: {fileID: 4913245471708700317}
   - component: {fileID: 3315848275908236074}
@@ -902,6 +903,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 620, y: 877}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3283214629417760311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2795421172750024604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32829cd0756f7274696b7276d4dfd1a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixedAxis: 0
+  fixCollider: 1
 --- !u!223 &9207979709025215160
 Canvas:
   m_ObjectHideFlags: 0
@@ -997,8 +1012,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 620, y: 877, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 620, y: 877, z: 0.57735026}
+  m_Center: {x: 0, y: 0, z: 0.28867513}
 --- !u!114 &1182323536383548498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1045,7 +1060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1091,9 +1106,7 @@ MonoBehaviour:
     \"Group Public\",\r\n  \"public\": \"Public\"\r\n}"
   dataUrl:
     url: https://vreca.github.io/v1/events.json
-  imageUrlPattern: https://vreca.github.io/v1/[1-9]\d{0,2}.png
-  imageUrlKeyRegex: ^https:\/\/vreca\.github\.io\/v1\/(.+)$
-  imageUrls: []
+  imageUrlPattern: https://vreca.github.io/v1/([1-9]\d{0,2}.png)
   entryPrefab: {fileID: 2485908300489686896}
 --- !u!114 &8612189675603509978
 MonoBehaviour:
@@ -1314,7 +1327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 0.23137257, g: 0.7372549, b: 0.8078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1498,7 +1511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1676,7 +1689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 0.10980393, g: 0.6784314, b: 0.74509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1912,7 +1925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 0.23137257, g: 0.7372549, b: 0.8078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2368,7 +2381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

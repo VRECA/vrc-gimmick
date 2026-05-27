@@ -48,14 +48,6 @@ namespace VRCEA.Calendar {
 #else
         internal
 #endif
-        VRCUrl[] imageUrls;
-
-        [NonSerialized]
-#if COMPILER_UDONSHARP
-        public
-#else
-        internal
-#endif
         VRCImageDownloader imageDownloader;
 
 #if COMPILER_UDONSHARP
@@ -134,8 +126,8 @@ namespace VRCEA.Calendar {
         void _ExpandToggleClick() {
             if (!expandToggle.isOn || hasLoadedImage || !Utilities.IsValid(posterImage)) return;
             hasLoadedImage = true;
-            if (!key2Url.TryGetValue(poster, TokenType.Int, out var url)) return;
-            imageDownloader.DownloadImage(imageUrls[url.Int], null, (IUdonEventReceiver)(object)this);
+            if (!key2Url.TryGetValue(poster, TokenType.Reference, out var url)) return;
+            imageDownloader.DownloadImage((VRCUrl)url.Reference, null, (IUdonEventReceiver)(object)this);
         }
 
 #if COMPILER_UDONSHARP
