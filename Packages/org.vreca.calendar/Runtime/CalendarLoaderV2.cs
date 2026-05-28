@@ -18,7 +18,7 @@ namespace VRCEA.Calendar {
         [SerializeField, HideInInspector] DataDictionary instanceTypeNameMap;
         [SerializeField] GameObject entryPrefab;
         Transform entryParent;
-        DataList spawnedEntries;
+        DataList spawnedEntries = new DataList();
         VRCImageDownloader imageDownloader;
 
         void Start() {
@@ -36,7 +36,6 @@ namespace VRCEA.Calendar {
             var rawDataRoot = data.DataDictionary;
             if (!rawDataRoot.TryGetValue("data", TokenType.DataList, out data)) return;
             var rawData = data.DataList;
-            if (spawnedEntries == null) spawnedEntries = new DataList();
             int count = rawData.Count;
             int spawnedCount = spawnedEntries.Count;
             for (int i = 0; i < count; i++) {

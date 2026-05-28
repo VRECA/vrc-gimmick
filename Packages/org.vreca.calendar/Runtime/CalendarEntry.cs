@@ -3,19 +3,20 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using VRC.SDKBase;
+using VRC.SDK3.Image;
 using VRC.SDK3.Data;
+using VRC.Udon.Common.Interfaces;
 using VRC.Economy;
 using UdonSharp;
 using JLChnToZ.VRC.Foundation;
-using VRC.SDKBase;
-using VRC.SDK3.Image;
-using VRC.Udon.Common.Interfaces;
 
 namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class CalendarEntry : UdonSharpBehaviour {
         [SerializeField] TMP_Text[] contents;
         string[] foramts;
+        [SerializeField, TextArea] string[] cancelledFormats;
         [SerializeField, BindEvent(nameof(Toggle.onValueChanged), nameof(_ExpandToggleClick))]
         Toggle expandToggle;
         [SerializeField, BindEvent(nameof(Button.onClick), nameof(_GroupButtonClick))]
@@ -69,13 +70,14 @@ namespace VRCEA.Calendar {
             args[6] = data.TryGetValue("instance_type", out var dt) && instanceTypeNameMap.TryGetValue(dt, TokenType.String, out dt) ? dt.String : "";
             groupId = ParseString("group_id");
             data.TryGetValue("poster", out poster);
+            var cancelled = data.TryGetValue("cancelled", TokenType.Boolean, out dt) && dt.Boolean;
             if (!Utilities.IsValid(foramts) || foramts.Length != contents.Length) {
                 foramts = new string[contents.Length];
                 for (int i = 0; i < contents.Length; i++)
                     foramts[i] = contents[i].text;
             }
             for (int i = 0; i < contents.Length; i++)
-                contents[i].text = string.Format(foramts[i], args);
+                contents[i].text = string.Format(cancelled ? cancelledFormats[i] : foramts[i], args);
             gameObject.SetActive(true);
             if (Utilities.IsValid(posterImageContainer))
                 posterImageContainer.SetActive(false);
