@@ -2212,7 +2212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3193,7 +3193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3810,7 +3810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -4232,10 +4232,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: c9c9a13758f670545866d436c6d4417c,
         type: 3}
+    - target: {fileID: 5157030862642455978, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/events/new
+      objectReference: {fileID: 0}
+    - target: {fileID: 6427797415696131678, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/events/new
+      objectReference: {fileID: 0}
     - target: {fileID: 6686607087915420137, guid: f1f452b25ebb26a469a630e6066110d7,
         type: 3}
       propertyPath: m_Name
       value: QR Container 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195436901975206720, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/events/new
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4367,10 +4382,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 2dd446090c1ca2241bc9962733ed6f10,
         type: 3}
+    - target: {fileID: 5157030862642455978, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/
+      objectReference: {fileID: 0}
+    - target: {fileID: 6427797415696131678, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/
+      objectReference: {fileID: 0}
     - target: {fileID: 6686607087915420137, guid: f1f452b25ebb26a469a630e6066110d7,
         type: 3}
       propertyPath: m_Name
       value: QR Container 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195436901975206720, guid: f1f452b25ebb26a469a630e6066110d7,
+        type: 3}
+      propertyPath: m_Text
+      value: https://event.vreca.org/
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
