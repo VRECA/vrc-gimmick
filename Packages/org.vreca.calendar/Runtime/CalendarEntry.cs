@@ -23,13 +23,24 @@ namespace VRCEA.Calendar {
         Button groupButton;
         [SerializeField, HideInInspector, Resolve(nameof(groupButton))]
         GameObject groupButtonObject;
+
         [SerializeField] GameObject posterImageContainer;
+        [SerializeField, HideInInspector, Resolve(nameof(posterImageContainer) + "#/**")]
+        [BindEvent(nameof(Button.onClick), nameof(_EnlargePosterButtonClick))]
+        Button enlargePosterButton;
         [SerializeField, HideInInspector, Resolve(nameof(posterImageContainer) + "#/**")]
         RawImage posterImage;
         [SerializeField, HideInInspector, Resolve(nameof(posterImage))]
         AspectRatioFitter posterAspect;
         [SerializeField, Resolve(nameof(posterAspect) + "#..*")]
         LayoutElement posterLayoutElement;
+
+        [SerializeField] GameObject largePosterImageContainer;
+        [SerializeField, HideInInspector, Resolve(nameof(largePosterImageContainer) + "#/**")]
+        RawImage largePosterImage;
+        [SerializeField, HideInInspector, Resolve(nameof(largePosterImage))]
+        AspectRatioFitter largePosterAspect;
+
         StringBuilder sb;
         string groupId;
         DataToken poster;
@@ -37,6 +48,8 @@ namespace VRCEA.Calendar {
         DateTime timeStart, timeEnd;
         bool hasLoadedImage;
         bool isHeightControlWidth;
+        IVRCImageDownload currentDownload;
+        float imageAspect;
 
         [NonSerialized]
 #if COMPILER_UDONSHARP
@@ -90,11 +103,25 @@ namespace VRCEA.Calendar {
             for (int i = 0; i < contents.Length; i++)
                 contents[i].text = string.Format(cancelled ? cancelledFormats[i] : foramts[i], args);
             gameObject.SetActive(true);
-            if (Utilities.IsValid(posterImageContainer))
-                posterImageContainer.SetActive(false);
             if (Utilities.IsValid(groupButtonObject))
                 groupButtonObject.SetActive(!string.IsNullOrEmpty(groupId));
+            CleanLoadedImage();
+        }
+
+        void OnDisable() => CleanLoadedImage();
+
+        void CleanLoadedImage() {
+            if (!Utilities.IsValid(currentDownload)) return;
+            currentDownload.Dispose();
+            currentDownload = null;
             hasLoadedImage = false;
+            posterImage.texture = null;
+            if (Utilities.IsValid(posterImageContainer))
+                posterImageContainer.SetActive(false);
+            if (Utilities.IsValid(expandToggle) && expandToggle.isOn)
+                expandToggle.isOn = false;
+            if (Utilities.IsValid(enlargePosterButton))
+                enlargePosterButton.interactable = false;
         }
 
         string ParseString(string key) => data.TryGetValue(key, TokenType.String, out var dt) ? dt.String : "";
@@ -140,7 +167,7 @@ namespace VRCEA.Calendar {
             if (!expandToggle.isOn || hasLoadedImage || !Utilities.IsValid(posterImage)) return;
             hasLoadedImage = true;
             if (!key2Url.TryGetValue(poster, TokenType.Reference, out var url)) return;
-            imageDownloader.DownloadImage((VRCUrl)url.Reference, null, (IUdonEventReceiver)(object)this, posterTextureInfo);
+            currentDownload = imageDownloader.DownloadImage((VRCUrl)url.Reference, null, (IUdonEventReceiver)(object)this, posterTextureInfo);
         }
 
 #if COMPILER_UDONSHARP
@@ -156,15 +183,32 @@ namespace VRCEA.Calendar {
             Store.OpenGroupPage(groupId);
         }
 
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        void _EnlargePosterButtonClick() {
+            if (!Utilities.IsValid(largePosterImageContainer)) return;
+            if (!Utilities.IsValid(currentDownload)) return;
+            var texture = currentDownload.Result;
+            if (!Utilities.IsValid(texture)) return;
+            largePosterImage.texture = texture;
+            if (Utilities.IsValid(largePosterAspect)) largePosterAspect.aspectRatio = imageAspect;
+            largePosterImageContainer.SetActive(true);
+        }
+
         public override void OnImageLoadSuccess(IVRCImageDownload result) {
             var resultTexture = result.Result;
             posterImage.texture = resultTexture;
-            var ratio = (float)resultTexture.width / resultTexture.height;
+            imageAspect = (float)resultTexture.width / resultTexture.height;
             if (Utilities.IsValid(posterAspect))
-                posterAspect.aspectRatio = ratio;
-            if (Utilities.IsValid(posterLayoutElement)) AdjustLayoutElement(ratio);
+                posterAspect.aspectRatio = imageAspect;
+            if (Utilities.IsValid(posterLayoutElement)) AdjustLayoutElement(imageAspect);
             if (Utilities.IsValid(posterImageContainer))
                 posterImageContainer.SetActive(true);
+            if (Utilities.IsValid(enlargePosterButton))
+                enlargePosterButton.interactable = true;
         }
 
         void AdjustLayoutElement(float ratio) {
