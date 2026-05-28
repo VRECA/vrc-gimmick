@@ -28,6 +28,8 @@ namespace VRCEA.Calendar {
         RawImage posterImage;
         [SerializeField, HideInInspector, Resolve(nameof(posterImage))]
         AspectRatioFitter posterAspect;
+        [SerializeField, Resolve(nameof(posterAspect) + "#..*")]
+        LayoutElement posterLayoutElement;
         StringBuilder sb;
         string groupId;
         DataToken poster;
@@ -50,6 +52,14 @@ namespace VRCEA.Calendar {
         internal
 #endif
         VRCImageDownloader imageDownloader;
+
+        [NonSerialized]
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        TextureInfo posterTextureInfo;
 
 #if COMPILER_UDONSHARP
         public
@@ -129,7 +139,7 @@ namespace VRCEA.Calendar {
             if (!expandToggle.isOn || hasLoadedImage || !Utilities.IsValid(posterImage)) return;
             hasLoadedImage = true;
             if (!key2Url.TryGetValue(poster, TokenType.Reference, out var url)) return;
-            imageDownloader.DownloadImage((VRCUrl)url.Reference, null, (IUdonEventReceiver)(object)this);
+            imageDownloader.DownloadImage((VRCUrl)url.Reference, null, (IUdonEventReceiver)(object)this, posterTextureInfo);
         }
 
 #if COMPILER_UDONSHARP
@@ -148,8 +158,17 @@ namespace VRCEA.Calendar {
         public override void OnImageLoadSuccess(IVRCImageDownload result) {
             var resultTexture = result.Result;
             posterImage.texture = resultTexture;
+            var ratio = (float)resultTexture.width / resultTexture.height;
             if (Utilities.IsValid(posterAspect))
-                posterAspect.aspectRatio = (float)resultTexture.width / resultTexture.height;
+                posterAspect.aspectRatio = ratio;
+            if (Utilities.IsValid(posterLayoutElement)) {
+                var preferredWidth = posterLayoutElement.preferredWidth;
+                if (preferredWidth >= 0) posterLayoutElement.preferredHeight = preferredWidth / ratio;
+                else {
+                    var preferredHeight = posterLayoutElement.preferredHeight;
+                    if (preferredHeight >= 0) posterLayoutElement.preferredWidth = preferredHeight * ratio;
+                }
+            }
             if (Utilities.IsValid(posterImageContainer))
                 posterImageContainer.SetActive(true);
         }

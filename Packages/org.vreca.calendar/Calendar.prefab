@@ -516,6 +516,8 @@ GameObject:
   - component: {fileID: 6969954721201018472}
   - component: {fileID: 1974078410002968647}
   - component: {fileID: 3568838897846505046}
+  - component: {fileID: 4970104484004466134}
+  - component: {fileID: 8770482423015243033}
   m_Layer: 0
   m_Name: Entry
   m_TagString: Untagged
@@ -581,6 +583,7 @@ MonoBehaviour:
   posterImageContainer: {fileID: 6523010115192832924}
   posterImage: {fileID: 0}
   posterAspect: {fileID: 0}
+  posterLayoutElement: {fileID: 0}
 --- !u!114 &1974078410002968647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +636,44 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!222 &4970104484004466134
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2485908300489686896}
+  m_CullTransparentMesh: 1
+--- !u!114 &8770482423015243033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2485908300489686896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 605b81398af74b8439a437f68a18a85b, type: 2}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2498886183885831657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,8 +1158,16 @@ MonoBehaviour:
     \"Group Public\",\r\n  \"public\": \"Public\"\r\n}"
   dataUrl:
     url: https://vreca.github.io/v1/events.json
-  imageUrlPattern: https://vreca.github.io/v1/([1-9]\d{0,2}.png)
+  imageUrlPattern: https://vreca\.github\.io/v1(/img/[1-9]\d{0,2}/poster\.jpg)
   entryPrefab: {fileID: 2485908300489686896}
+  defaultPosterTextureInfo:
+    WrapModeU: 1
+    WrapModeV: 1
+    WrapModeW: 1
+    FilterMode: 1
+    AnisoLevel: 9
+    MaterialProperty: _MainTex
+    GenerateMipMaps: 1
 --- !u!114 &8612189675603509978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1505,12 +1554,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 88
+    m_Left: 93
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -1948,9 +1997,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 88
+  m_MinWidth: 100
   m_MinHeight: -1
-  m_PreferredWidth: 88
+  m_PreferredWidth: 100
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
@@ -2357,7 +2406,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -38, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2385295129162763790
 CanvasRenderer:
@@ -2406,7 +2455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AspectMode: 3
+  m_AspectMode: 1
   m_AspectRatio: 1
 --- !u!1 &7359226270254779291
 GameObject:

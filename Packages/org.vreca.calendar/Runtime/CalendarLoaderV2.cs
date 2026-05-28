@@ -17,6 +17,7 @@ namespace VRCEA.Calendar {
         [SerializeField, HideInInspector] DataDictionary key2url;
         [SerializeField, HideInInspector] DataDictionary instanceTypeNameMap;
         [SerializeField] GameObject entryPrefab;
+        [SerializeField] TextureInfo defaultPosterTextureInfo;
         Transform entryParent;
         DataList spawnedEntries = new DataList();
         VRCImageDownloader imageDownloader;
@@ -48,6 +49,7 @@ namespace VRCEA.Calendar {
                     entryHandler.instanceTypeNameMap = instanceTypeNameMap;
                     entryHandler.key2Url = key2url;
                     entryHandler.imageDownloader = imageDownloader;
+                    entryHandler.posterTextureInfo = defaultPosterTextureInfo;
                 } else
                     entryHandler = (CalendarEntry)spawnedEntries[i].Reference;
                 entryHandler.data = rawData[i].DataDictionary;
