@@ -1,6 +1,8 @@
 ﻿using JLChnToZ.VRC.Foundation;
+using TMPro;
 using UdonSharp;
 using UnityEngine;
+using UnityEngine.UI;
 using VRC.SDK3.Data;
 using VRC.SDK3.Image;
 using VRC.SDK3.StringLoading;
@@ -18,6 +20,11 @@ namespace VRCEA.Calendar {
         [SerializeField, HideInInspector] DataDictionary instanceTypeNameMap;
         [SerializeField] GameObject entryPrefab;
         [SerializeField] TextureInfo defaultPosterTextureInfo;
+        [SerializeField, BindEvent(nameof(Button.onClick), nameof(_Reload))] Button reloadButton;
+        [SerializeField] GameObject loadingIndicator, errorIndicator, noDataIndicator;
+        [SerializeField] TMP_Text errorText;
+        [SerializeField] string dataErrorFormatMessage;
+        string errorFormat;
         Transform entryParent;
         DataList spawnedEntries = new DataList();
         VRCImageDownloader imageDownloader;
@@ -29,15 +36,28 @@ namespace VRCEA.Calendar {
         }
 
         public void _Reload() {
+            if (Utilities.IsValid(reloadButton)) reloadButton.interactable = false;
+            if (Utilities.IsValid(loadingIndicator)) loadingIndicator.SetActive(true);
+            if (Utilities.IsValid(errorIndicator)) errorIndicator.SetActive(false);
             VRCStringDownloader.LoadUrl(dataUrl, (IUdonEventReceiver)(object)this);
         }
 
         public override void OnStringLoadSuccess(IVRCStringDownload result) {
-            if (!VRCJson.TryDeserializeFromJson(result.Result, out var data) || data.TokenType != TokenType.DataDictionary) return;
+            if (!VRCJson.TryDeserializeFromJson(result.Result, out var data) || data.TokenType != TokenType.DataDictionary) {
+                ShowError(data.ToString());
+                return;
+            }
             var rawDataRoot = data.DataDictionary;
-            if (!rawDataRoot.TryGetValue("data", TokenType.DataList, out data)) return;
+            if (!rawDataRoot.TryGetValue("data", TokenType.DataList, out data)) {
+                ShowError(dataErrorFormatMessage);
+                return;
+            }
+            if (Utilities.IsValid(reloadButton)) reloadButton.interactable = true;
+            if (Utilities.IsValid(loadingIndicator)) loadingIndicator.SetActive(false);
+            if (Utilities.IsValid(errorIndicator)) errorIndicator.SetActive(false);
             var rawData = data.DataList;
             int count = rawData.Count;
+            if (Utilities.IsValid(noDataIndicator)) noDataIndicator.SetActive(count == 0);
             int spawnedCount = spawnedEntries.Count;
             for (int i = 0; i < count; i++) {
                 CalendarEntry entryHandler;
@@ -56,6 +76,24 @@ namespace VRCEA.Calendar {
             }
             for (int i = count; i < spawnedCount; i++)
                 ((CalendarEntry)spawnedEntries[i].Reference).gameObject.SetActive(false);
+        }
+
+        public override void OnStringLoadError(IVRCStringDownload result) {
+            ShowError(result.Error);
+        }
+
+        void ShowError(string message) {
+            if (Utilities.IsValid(reloadButton))
+                reloadButton.interactable = true;
+            if (Utilities.IsValid(loadingIndicator))
+                loadingIndicator.SetActive(false);
+            if (Utilities.IsValid(errorIndicator))
+                errorIndicator.SetActive(true);
+            if (Utilities.IsValid(errorText)) {
+                if (string.IsNullOrEmpty(errorFormat))
+                    errorFormat = errorText.text;
+                errorText.text = string.Format(errorFormat, message);
+            }
         }
     }
 

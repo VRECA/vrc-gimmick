@@ -36,6 +36,7 @@ namespace VRCEA.Calendar {
         object[] args;
         DateTime timeStart, timeEnd;
         bool hasLoadedImage;
+        bool isHeightControlWidth;
 
         [NonSerialized]
 #if COMPILER_UDONSHARP
@@ -161,16 +162,24 @@ namespace VRCEA.Calendar {
             var ratio = (float)resultTexture.width / resultTexture.height;
             if (Utilities.IsValid(posterAspect))
                 posterAspect.aspectRatio = ratio;
-            if (Utilities.IsValid(posterLayoutElement)) {
-                var preferredWidth = posterLayoutElement.preferredWidth;
-                if (preferredWidth >= 0) posterLayoutElement.preferredHeight = preferredWidth / ratio;
-                else {
-                    var preferredHeight = posterLayoutElement.preferredHeight;
-                    if (preferredHeight >= 0) posterLayoutElement.preferredWidth = preferredHeight * ratio;
-                }
-            }
+            if (Utilities.IsValid(posterLayoutElement)) AdjustLayoutElement(ratio);
             if (Utilities.IsValid(posterImageContainer))
                 posterImageContainer.SetActive(true);
+        }
+
+        void AdjustLayoutElement(float ratio) {
+            if (!isHeightControlWidth) {
+                var preferredWidth = posterLayoutElement.preferredWidth;
+                if (preferredWidth >= 0) {
+                    posterLayoutElement.preferredHeight = preferredWidth / ratio;
+                    return;
+                }
+            }
+            var preferredHeight = posterLayoutElement.preferredHeight;
+            if (preferredHeight >= 0) {
+                posterLayoutElement.preferredWidth = preferredHeight * ratio;
+                isHeightControlWidth = true;
+            }
         }
     }
 }
