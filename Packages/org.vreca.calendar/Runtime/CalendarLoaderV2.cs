@@ -104,7 +104,7 @@ namespace VRCEA.Calendar {
         void ISelfPreProcess.PreProcess() {
             instanceTypeNameMap = VRCJson.TryDeserializeFromJson(instnaceTypeNameMapJson, out var data) &&
                 data.TokenType == TokenType.DataDictionary ?
-                data.DataDictionary : new DataDictionary();
+                data.DataDictionary.DeepClone() : new DataDictionary();
             instnaceTypeNameMapJson = "";
         }
     }
