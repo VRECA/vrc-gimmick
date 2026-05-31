@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -75,6 +76,14 @@ namespace VRCEA.Calendar {
 #endif
         TextureInfo posterTextureInfo;
 
+        [NonSerialized]
+#if COMPILER_UDONSHARP
+        public
+#else
+        internal
+#endif
+        CultureInfo currentCultureInfo;
+
 #if COMPILER_UDONSHARP
         public
 #else
@@ -101,7 +110,7 @@ namespace VRCEA.Calendar {
                     foramts[i] = contents[i].text;
             }
             for (int i = 0; i < contents.Length; i++)
-                contents[i].text = string.Format(cancelled ? cancelledFormats[i] : foramts[i], args);
+                contents[i].text = string.Format(currentCultureInfo, cancelled ? cancelledFormats[i] : foramts[i], args);
             gameObject.SetActive(true);
             if (Utilities.IsValid(groupButtonObject))
                 groupButtonObject.SetActive(!string.IsNullOrEmpty(groupId));
@@ -149,7 +158,7 @@ namespace VRCEA.Calendar {
                 else sb.Clear();
                 for (int i = 0, count = list.Count; i < count; i++) {
                     dt = list[i];
-                    sb.AppendFormat(format, dt);
+                    sb.AppendFormat(currentCultureInfo, format, dt);
                     if (i < count - 1) sb.Append(separator);
                 }
                 args[index] = sb.ToString();

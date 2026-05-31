@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7434012211528671517}
   - component: {fileID: 2911600339160844178}
   m_Layer: 0
-  m_Name: Text
+  m_Name: X
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -237,9 +237,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<size=80%>{2:dd/MM}</size>
+  m_text: '<size=80%>{2:M}</size>
 
-    {2:HH:mm}'
+    {2:t}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fdd41ce7cb4100a4d8ff99d393fa29f3, type: 2}
   m_sharedMaterial: {fileID: 6900710446821825097, guid: fdd41ce7cb4100a4d8ff99d393fa29f3,
@@ -1351,6 +1351,7 @@ MonoBehaviour:
   noDataIndicator: {fileID: 5679956695436821864}
   errorText: {fileID: 436561101928356011}
   dataErrorFormatMessage: "\u683C\u5F0F\u932F\u8AA4\uFF0C\u8ACB\u806F\u7D61\u6211\u5011\u7684\u7CFB\u7D71\u7BA1\u7406\u54E1\u3002"
+  regionCode: zh-TW
 --- !u!114 &8612189675603509978
 MonoBehaviour:
   m_ObjectHideFlags: 0

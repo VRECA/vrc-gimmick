@@ -1,4 +1,4 @@
-﻿using JLChnToZ.VRC.Foundation;
+﻿using System.Globalization;
 using TMPro;
 using UdonSharp;
 using UnityEngine;
@@ -8,6 +8,7 @@ using VRC.SDK3.Image;
 using VRC.SDK3.StringLoading;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
+using JLChnToZ.VRC.Foundation;
 
 namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
@@ -24,12 +25,15 @@ namespace VRCEA.Calendar {
         [SerializeField] GameObject loadingIndicator, errorIndicator, noDataIndicator;
         [SerializeField] TMP_Text errorText;
         [SerializeField] string dataErrorFormatMessage;
+        [SerializeField] string regionCode;
         string errorFormat;
         Transform entryParent;
         DataList spawnedEntries = new DataList();
         VRCImageDownloader imageDownloader;
+        CultureInfo cultureInfo;
 
         void Start() {
+            cultureInfo = !string.IsNullOrEmpty(regionCode) ? CultureInfo.GetCultureInfo(regionCode) : CultureInfo.InvariantCulture;
             _Reload();
             entryParent = entryPrefab.transform.parent;
             imageDownloader = new VRCImageDownloader();
@@ -70,6 +74,7 @@ namespace VRCEA.Calendar {
                     entryHandler.key2Url = key2url;
                     entryHandler.imageDownloader = imageDownloader;
                     entryHandler.posterTextureInfo = defaultPosterTextureInfo;
+                    entryHandler.currentCultureInfo = cultureInfo;
                 } else
                     entryHandler = (CalendarEntry)spawnedEntries[i].Reference;
                 entryHandler.data = rawData[i].DataDictionary;
