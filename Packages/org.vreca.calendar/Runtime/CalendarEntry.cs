@@ -16,7 +16,7 @@ namespace VRCEA.Calendar {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class CalendarEntry : UdonSharpBehaviour {
         [SerializeField] TMP_Text[] contents;
-        string[] foramts;
+        string[] formats;
         [SerializeField, TextArea] string[] cancelledFormats;
         [SerializeField, BindEvent(nameof(Toggle.onValueChanged), nameof(_ExpandToggleClick))]
         Toggle expandToggle;
@@ -99,18 +99,18 @@ namespace VRCEA.Calendar {
             timeEnd = ParseTime("time_end");
             args[2] = timeStart;
             args[3] = timeEnd;
-            args[4] = (timeEnd - timeStart).TotalHours;
+            args[4] = ParseFragments((float)(timeEnd - timeStart).TotalHours);
             args[6] = data.TryGetValue("instance_type", out var dt) && instanceTypeNameMap.TryGetValue(dt, TokenType.String, out dt) ? dt.String : "";
             groupId = ParseString("group_id");
             data.TryGetValue("poster", out poster);
             var cancelled = data.TryGetValue("cancelled", TokenType.Boolean, out dt) && dt.Boolean;
-            if (!Utilities.IsValid(foramts) || foramts.Length != contents.Length) {
-                foramts = new string[contents.Length];
+            if (!Utilities.IsValid(formats) || formats.Length != contents.Length) {
+                formats = new string[contents.Length];
                 for (int i = 0; i < contents.Length; i++)
-                    foramts[i] = contents[i].text;
+                    formats[i] = contents[i].text;
             }
             for (int i = 0; i < contents.Length; i++)
-                contents[i].text = string.Format(currentCultureInfo, cancelled ? cancelledFormats[i] : foramts[i], args);
+                contents[i].text = string.Format(currentCultureInfo, cancelled ? cancelledFormats[i] : formats[i], args);
             gameObject.SetActive(true);
             if (Utilities.IsValid(groupButtonObject))
                 groupButtonObject.SetActive(!string.IsNullOrEmpty(groupId));
@@ -141,6 +141,33 @@ namespace VRCEA.Calendar {
                 return;
             }
             args[index] = "";
+        }
+
+        string ParseFragments(float number) {
+            const float oneEighth = 1F / 8F;
+            const float oneQuarter = 1F / 4F;
+            const float oneThird = 1F / 3F;
+            const float threeEighths = 3F / 8F;
+            const float half = 1F / 2F;
+            const float fiveEighths = 5F / 8F;
+            const float twoThirds = 2F / 3F;
+            const float threeQuarters = 3F / 4F;
+            const float sevenEighths = 7F / 8F;
+            float i = Mathf.Floor(number);
+            float r = number - i;
+            if (Mathf.Approximately(r, 0F)) return i > 0 ? i.ToString(currentCultureInfo) : "0";
+            char frag = '\0';
+            if (Mathf.Approximately(r, oneEighth)) frag = '⅛';
+            else if (Mathf.Approximately(r, oneQuarter)) frag = '¼';
+            else if (Mathf.Approximately(r, oneThird)) frag = '⅓';
+            else if (Mathf.Approximately(r, threeEighths)) frag = '⅜';
+            else if (Mathf.Approximately(r, half)) frag = '½';
+            else if (Mathf.Approximately(r, fiveEighths)) frag = '⅝';
+            else if (Mathf.Approximately(r, twoThirds)) frag = '⅔';
+            else if (Mathf.Approximately(r, threeQuarters)) frag = '¾';
+            else if (Mathf.Approximately(r, sevenEighths)) frag = '⅞';
+            if (frag != '\0') return i > 0 ? $"{i}{frag}" : frag.ToString();
+            return number.ToString("0.##", currentCultureInfo);
         }
 
         DateTime ParseTime(string key) {

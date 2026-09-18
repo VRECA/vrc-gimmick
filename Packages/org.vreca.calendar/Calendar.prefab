@@ -395,7 +395,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>{0}</b><size=70%>\r\n<align=right>{7}</align>\n\u6642\u9577\uFF1A{4:0.##}
+  m_text: "<b>{0}</b><size=70%>\r\n<align=right>{7}</align>\n\u6642\u9577\uFF1A{4}
     \u5C0F\u6642 <size=80%>Join {5} ({6})</size></size>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fdd41ce7cb4100a4d8ff99d393fa29f3, type: 2}
